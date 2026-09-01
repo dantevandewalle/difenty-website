@@ -1,0 +1,29 @@
+name: Rebuild uploaded site
+
+on:
+  push:
+    branches: [upload-user-version]
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild exact uploaded index
+        shell: bash
+        run: |
+          cat .upload/part0.b64 .upload/part1.b64 .upload/part2.b64 .upload/part3.b64 .upload/part4.b64 | base64 -d | xz -d > index.html
+          actual=$(printf 'blob %s\0' "$(wc -c < index.html)" | cat - index.html | sha1sum | awk '{print $1}')
+          test "$actual" = "42080750df4ce5f1978d53927a521c19c504cdb0"
+          rm -rf .upload
+          rm -f .github/workflows/rebuild-upload.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Replace site with uploaded version"
+          git push origin HEAD:upload-user-version
