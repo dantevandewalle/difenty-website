@@ -2,13 +2,16 @@ name: Rebuild uploaded site
 
 on:
   push:
-    branches: [upload-user-version]
+    branches: [main]
+    paths:
+      - '.upload/**'
 
 permissions:
   contents: write
 
 jobs:
   rebuild:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,9 +24,8 @@ jobs:
           actual=$(printf 'blob %s\0' "$(wc -c < index.html)" | cat - index.html | sha1sum | awk '{print $1}')
           test "$actual" = "42080750df4ce5f1978d53927a521c19c504cdb0"
           rm -rf .upload
-          rm -f .github/workflows/rebuild-upload.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Replace site with uploaded version"
-          git push origin HEAD:upload-user-version
+          git push origin HEAD:main
