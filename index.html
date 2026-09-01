@@ -301,6 +301,8 @@
   .form-state{border-radius:12px;padding:16px 18px;font-size:14.5px;display:none}
   .form-state.err{background:rgba(255,110,110,.08);border:1px solid rgba(255,110,110,.3);color:#FFB3B3}
   .form-state.ok{background:rgba(124,58,237,.1);border:1px solid rgba(159,103,255,.4);color:var(--text)}
+  .contact-alt{display:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px 30px}
+  .contact-alt p{color:var(--text-2);margin-bottom:20px}
   .direct-mail{margin-top:26px;font-size:15.5px;color:var(--text-2)}
   .direct-mail a{font-weight:600}
 
@@ -833,6 +835,10 @@
         <div class="form-state ok" id="formOk" data-en="Thanks, we'll get back to you shortly.">Bedankt, we komen er snel bij je op terug.</div>
         <div class="form-state err" id="formErr" data-en="Something went wrong sending your message. Email us directly at <a href=&quot;mailto:info@difenty.com&quot;>info@difenty.com</a>.">Er ging iets mis bij het versturen. Mail ons direct via <a href="mailto:info@difenty.com">info@difenty.com</a>.</div>
       </form>
+      <div class="contact-alt reveal" style="--d:140ms" id="contactAlt">
+        <p data-en="Email us how your business works and where manual work slows you down. You'll hear from us within one working day.">Mail ons hoe je bedrijf werkt en waar handwerk je afremt. Je hoort binnen een werkdag van ons.</p>
+        <a class="btn" href="mailto:info@difenty.com?subject=Aanvraag%20via%20difenty.com" data-en="Email your request <span class=&quot;arr&quot;>&rarr;</span>">Mail je aanvraag <span class="arr">&rarr;</span></a>
+      </div>
     </div>
   </section>
 
@@ -981,6 +987,11 @@
   var btn = document.getElementById('submitBtn');
   var ok = document.getElementById('formOk');
   var err = document.getElementById('formErr');
+  var contactAlt = document.getElementById('contactAlt');
+  if(!FORM_ENDPOINT){
+    if(form) form.style.display = 'none';
+    if(contactAlt) contactAlt.style.display = 'block';
+  }
 
   function validate(){
     var valid = true;
